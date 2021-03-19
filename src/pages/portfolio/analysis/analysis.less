@@ -1,0 +1,160 @@
+@import "../glance/list";
+
+.contentArea {
+  .contentArea;
+  height: calc(100% - @breadCrumbHeight);
+  //background-color: white;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+}
+
+.analysisTab {
+  height: 100%;
+  padding: 0 10px 5px 10px;
+
+  .analysisTabContent {
+    //border: 1px red solid;
+
+    .button {
+      margin: 5px;
+    }
+  }
+}
+
+.datePicker {
+  height: 30px;
+  width: 150px;
+}
+
+.spin {
+  height: 300px;
+  line-height: 300px;
+  width: 100%;
+}
+
+.performance{
+  height: fit-content;
+
+  table {
+    border: none;
+    width: 100%;
+    collapse: seperate;
+
+  }
+
+  th {
+    border: 1px #ccc solid;
+  }
+
+  th:first-child{
+    padding-left: 10px;
+  }
+
+  th:nth-child(2){
+    padding-left: 10px;
+  }
+
+  th:nth-child(3){
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  th:last-child{
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  td {
+    border: 1px #8c8c8c solid;
+  }
+
+  td:first-child{
+    padding-left: 10px;
+  }
+
+  td:nth-child(2){
+    padding-left: 10px;
+  }
+
+  td:nth-last-child(2){
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  td:last-child{
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  tr:nth-child(odd){
+    background-color: #1f1f1f;
+  }
+
+  tr:nth-child(even){
+    //background-color: #fff;
+  }
+
+  tr:first-child {
+    height: 30px;
+  }
+
+  .chart {
+    width: calc(100% - 5px);
+    height: 277px;
+    margin-left: 5px;
+  }
+}
+
+.holding {
+  overflow-y: auto;
+
+  .holdingDropdown {
+    margin-top: -10px;
+    margin-left: 5px;
+  }
+
+  .holdingFundTable {
+    height: 100%;
+    //overflow-x: auto;
+  }
+}
+
+.summaryRight {
+  text-align: right;
+}
+
+.attribute {
+  //display: inline-flex;
+  //flex-wrap: wrap;
+  width: 100%;
+  //overflow-y: auto;
+
+  .card {
+    width: 100%;
+    height: 380px;
+    margin-bottom: 5px;
+    padding: 0;
+
+    .chart {
+      height: 325px;
+      width: 100%;
+    }
+  }
+
+  .card2xHeight {
+    width: 100%;
+    height: 765px;
+    margin-bottom: 5px;
+
+    .chart2xHeight {
+      height: 650px;
+      width: 100%;
+    }
+  }
+
+  .card:nth-child(odd){
+    //margin-right: 1%;
+    padding: 0;
+  }
+}
