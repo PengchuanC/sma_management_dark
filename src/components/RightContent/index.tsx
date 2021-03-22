@@ -1,8 +1,11 @@
-import { Tag, Space } from 'antd';
+import {Tag, Space} from 'antd';
 import React from 'react';
 import { useModel } from 'umi';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
+import { Fullscreen } from '@alitajs/antd-plus';
+import { ExpandOutlined, CompressOutlined } from '@ant-design/icons';
+
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -14,6 +17,11 @@ const ENVTagColor = {
 
 const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  const [enabled, setEnabled] = React.useState(false);
+
+  const handleClick = () => {
+    setEnabled(!enabled);
+  };
 
   if (!initialState || !initialState.settings) {
     return null;
@@ -46,6 +54,14 @@ const GlobalHeaderRight: React.FC = () => {
         //   console.log('input', value);
         // }}
       />
+      <div>
+      <Fullscreen
+        enabled={enabled}
+        target={document.documentElement}
+      >
+        {!enabled?<ExpandOutlined onClick={handleClick} />: <CompressOutlined onClick={handleClick}/>}
+      </Fullscreen>
+    </div>
       {REACT_APP_ENV && (
         <span>
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
@@ -54,4 +70,5 @@ const GlobalHeaderRight: React.FC = () => {
     </Space>
   );
 };
+
 export default GlobalHeaderRight;

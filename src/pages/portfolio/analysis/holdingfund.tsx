@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { AnalysisTabContext } from '@/utils/localstorage';
 import http from '@/utils/http';
 import { formatPercent, numeralNum } from '@/utils/util';
@@ -60,7 +61,7 @@ export default class HoldingFund extends React.Component<any, any> {
   }
 
   render() {
-    const columns: any = [
+    const columns: ColumnsType<holdingFundType> = [
       {
         title: '序号',
         dataIndex: 'key',

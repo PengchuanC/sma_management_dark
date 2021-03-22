@@ -9,6 +9,10 @@
     icon: 'FundViewOutlined',
     routes: [
       {
+        'path': '/portfolio',
+        redirect: '/portfolio/glance'
+      },
+      {
         path: '/portfolio/glance',
         name: '首页概览',
         icon: 'AppstoreOutlined',

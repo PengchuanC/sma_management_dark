@@ -96,7 +96,7 @@ export default class Overview extends React.Component<any, any> {
     const portName = localStorage.getItem('portName') || ''
     return (
       <>
-        <PageContainer title={portName} fixedHeader>
+        <PageContainer title={portName}>
           <div className={styles.contentArea}>
             <AnalysisTabs portCode={portcode}/>
           </div>

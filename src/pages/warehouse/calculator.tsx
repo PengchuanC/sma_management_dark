@@ -9,7 +9,7 @@ import {
   Spin,
   Tag,
   Input,
-  Table,
+  Table, Button,
 } from 'antd';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
@@ -18,7 +18,7 @@ import http from '@/utils/http';
 
 import styles from './warehouse.less';
 
-const { Option } = Select;
+const {Option} = Select;
 
 // 基金交易记录表格
 class TradingTable extends React.Component<any, any> {
@@ -26,6 +26,7 @@ class TradingTable extends React.Component<any, any> {
     portCode: this.props.portCode,
     secucode: this.props.secucode,
     data: [],
+    yx: []
   };
 
   fetchData = () => {
@@ -42,6 +43,7 @@ class TradingTable extends React.Component<any, any> {
       .then(r => {
         this.setState({
           data: r.data,
+          yx: r.yx,
           portCode: this.props.portCode,
           secucode: this.props.secucode,
         });
@@ -105,17 +107,36 @@ class TradingTable extends React.Component<any, any> {
     ];
 
     return (
-      <Table
-        size="small"
-        sticky
-        bordered
-        columns={columns}
-        pagination={{
-          defaultPageSize: 15,
-          pageSizeOptions: ['20', '25', '50', '100', '200'],
-        }}
-        dataSource={this.state.data}
-      />
+      <>
+        <div>
+          <Button style={{marginBottom: '5px'}}>全部份额</Button>
+          <Table
+            size="small"
+            sticky
+            bordered
+            columns={columns}
+            pagination={{
+              defaultPageSize: 15,
+              pageSizeOptions: ['20', '25', '50', '100', '200'],
+            }}
+            dataSource={this.state.data}
+          />
+        </div>
+        {this.state.yx.length > 0 ? <div>
+          <Button style={{marginBottom: '5px', marginTop: '20px'}}>全部份额</Button>
+          <Table
+            size="small"
+            sticky
+            bordered
+            columns={columns}
+            pagination={{
+              defaultPageSize: 15,
+              pageSizeOptions: ['20', '25', '50', '100', '200'],
+            }}
+            dataSource={this.state.yx}
+          />
+        </div> : <></>}
+      </>
     );
   }
 }
@@ -135,10 +156,10 @@ class UserRemoteSelect extends React.Component<any, any> {
   };
 
   fetchFund = (value: any) => {
-    this.setState({ data: [], fetching: true });
+    this.setState({data: [], fetching: true});
     http
       .get('/warehouse/fundlist/', {
-        params: { keyword: value, portCode: this.props.parent.state.portfolio },
+        params: {keyword: value, portCode: this.props.parent.state.portfolio},
       })
       .then(r => {
         const data = r.data.map((e: any) => {
@@ -175,6 +196,7 @@ class UserRemoteSelect extends React.Component<any, any> {
   componentDidMount() {
     this.fetchFund(null);
   }
+
   componentDidUpdate() {
     if (this.state.portCode !== this.props.parent.state.portfolio) {
       this.fetchFund(null);
@@ -182,7 +204,7 @@ class UserRemoteSelect extends React.Component<any, any> {
   }
 
   render() {
-    const { fetching, data, value } = this.state;
+    const {fetching, data, value} = this.state;
     return (
       <Select
         showSearch
@@ -190,11 +212,11 @@ class UserRemoteSelect extends React.Component<any, any> {
         labelInValue
         value={value}
         placeholder="请输入需要计算费率的基金"
-        notFoundContent={fetching ? <Spin size="small" /> : null}
+        notFoundContent={fetching ? <Spin size="small"/> : null}
         filterOption={false}
         onSearch={this.fetchFund}
         onChange={this.handleChange}
-        style={{ width: '50%' }}
+        style={{width: '50%'}}
       >
         {data.map((d: { value: number; text: string }, idx: number) => (
           // eslint-disable-next-line react/no-array-index-key
@@ -226,26 +248,26 @@ export default class Calculator extends React.Component<any, any> {
         },
       })
       .then(r => {
-        this.setState({ ransom: r.fee });
+        this.setState({ransom: r.fee});
       });
   };
 
   fetchPurchase = (purchase: number) => {
     http
       .get('/warehouse/purchase/', {
-        params: { secucode: this.state.fundInfo.fund, money: purchase },
+        params: {secucode: this.state.fundInfo.fund, money: purchase},
       })
       .then(r => {
-        this.setState({ purchase: r.fee, ratio: r.ratio });
+        this.setState({purchase: r.fee, ratio: r.ratio});
       });
   };
 
   state = {
-    fundInfo: { fund: '', nav: 0, date: '', available: 0 },
+    fundInfo: {fund: '', nav: 0, date: '', available: 0, yx_available: 0},
     nav: 0,
     portfolio: '',
     ports: [],
-    portfolioInfo: { cash: 0, shares: 0, date: '' },
+    portfolioInfo: {cash: 0, shares: 0, date: ''},
     date: moment().format('ll'),
     purchase: null,
     ransom: null,
@@ -260,14 +282,14 @@ export default class Calculator extends React.Component<any, any> {
     date: string;
     available: number;
   }) => {
-    this.setState({ fundInfo });
+    this.setState({fundInfo});
   };
 
   // 获取全部组合
   fetchPortfolio = () => {
     http.get('/warehouse/portfolio/').then(r => {
       const {data} = r;
-      this.setState({ ports: data });
+      this.setState({ports: data});
     });
   };
 
@@ -289,9 +311,9 @@ export default class Calculator extends React.Component<any, any> {
   // 获取组合id
   onChange3 = (value: any) => {
     http
-      .get('/warehouse/portfolio/cash/', { params: { portCode: value } })
+      .get('/warehouse/portfolio/cash/', {params: {portCode: value}})
       .then(r => {
-        this.setState({ portfolio: value, portfolioInfo: r });
+        this.setState({portfolio: value, portfolioInfo: r});
       });
   };
 
@@ -304,7 +326,7 @@ export default class Calculator extends React.Component<any, any> {
       <>
         <Select
           placeholder="请选择组合"
-          style={{ width: '200px' }}
+          style={{width: '200px'}}
           onChange={this.onChange3}
         >
           {this.state.ports.map(
@@ -344,7 +366,7 @@ export default class Calculator extends React.Component<any, any> {
               </Card>
             </div>
             <Card className={styles.calculator}>
-              <UserRemoteSelect parent={this} />
+              <UserRemoteSelect parent={this}/>
               <div className={styles.itemWrapper}>
                 <Tag color="#f50" className={styles.itemTitle}>
                   赎回计算器
@@ -354,7 +376,7 @@ export default class Calculator extends React.Component<any, any> {
                 <Tag className={styles.item}>拟赎回份额</Tag>
                 <Input
                   size="small"
-                  placeholder="0"
+                  placeholder="输入份额"
                   onChange={this.onChange}
                   className={styles.item}
                   disabled={!this.inputAvailable()}
@@ -368,6 +390,27 @@ export default class Calculator extends React.Component<any, any> {
                   size="small"
                   className={styles.itemWidder}
                 />
+                {this.state.fundInfo.yx_available ?
+                  <>
+                    <Input
+                      disabled
+                      defaultValue="0份可用"
+                      value={`${numeral(this.state.fundInfo?.yx_available).format(
+                        '0,0.00',
+                      )}份(宜信)`}
+                      size="small"
+                      className={styles.itemWidder}
+                    />
+                    <Input
+                      disabled
+                      defaultValue="0份可用"
+                      value={`${numeral(this.state.fundInfo?.available - this.state.fundInfo?.yx_available | 0).format(
+                        '0,0.00',
+                      )}份(天天)`}
+                      size="small"
+                      className={styles.itemWidder}
+                    />
+                  </> : <></>}
               </div>
               <div className={styles.itemWrapper}>
                 <Tag className={styles.item}>最新净值</Tag>

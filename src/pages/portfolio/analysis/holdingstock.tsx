@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Row, Col } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { AnalysisTabContext } from '@/utils/localstorage';
 import { formatPercent } from '@/utils/util';
 import http from '@/utils/http';
@@ -40,7 +41,7 @@ export default class HoldingStock extends React.Component<any, any> {
   }
 
   render() {
-    const columns: any = [
+    const columns: ColumnsType<holdingStockType> = [
       {
         title: '序号',
         dataIndex: 'key',
@@ -84,7 +85,7 @@ export default class HoldingStock extends React.Component<any, any> {
         sorter: (a: holdingStockType, b: holdingStockType) => a.ofnv - b.ofnv,
       },
       ]
-    const columns2: any = [
+    const columns2: ColumnsType<industryType> = [
       {
         title: '序号',
         dataIndex: 'key',
@@ -103,7 +104,7 @@ export default class HoldingStock extends React.Component<any, any> {
         key: 'ratio',
         align: 'right',
         render: (text: any, record: industryType) => formatPercent(record.ratio),
-        sorter: (a: holdingStockType, b: holdingStockType) => a.ratio - b.ratio,
+        sorter: (a: industryType, b: industryType) => a.ratio - b.ratio,
       },
       {
         title: '占权益市值比',

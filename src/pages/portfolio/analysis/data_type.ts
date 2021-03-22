@@ -80,6 +80,17 @@ interface holdingFundType {
   max_apply: number
 }
 
+// 组合持仓基金数据-宜信普泽
+interface holdingFundTypeYX {
+  key: number,
+  secucode: string,
+  secuname: string,
+  mkt_cap: number,
+  holding_value: number,
+  shares: number,
+  ratio: number,
+}
+
 
 // 基金持股
 interface holdingStockType {

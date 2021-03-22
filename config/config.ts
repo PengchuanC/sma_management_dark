@@ -9,13 +9,12 @@ import routes from './routes';
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
-  hash: false,
   antd: {
     dark: true
   },
   dva: {
     hmr: true,
-    immer: true
+    immer: false
   },
   layout: {
     siderWidth: 208,
@@ -40,9 +39,10 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
-    basePath: '/',
+    basePath: '/manage',
   },
-  base: '/manage/',
+  // 打包后手动去掉index.html中的baseRouter相关代码
+  base: '/manage',
   publicPath: '/manage/',
   outputPath : './manage',
   openAPI: [

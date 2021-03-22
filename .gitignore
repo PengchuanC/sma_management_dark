@@ -38,3 +38,5 @@ screenshot
 .eslintcache
 
 build
+/manage/
+/manage.tar.gz
