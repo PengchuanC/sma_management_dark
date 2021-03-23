@@ -97,7 +97,7 @@ class TradingTable extends React.Component<any, any> {
           numeral(record.available).format('1,000.00'),
       },
       {
-        title: '适用费率',
+        title: '赎回适用费率',
         dataIndex: 'fee',
         key: 'fee',
         align: 'center',
@@ -123,7 +123,7 @@ class TradingTable extends React.Component<any, any> {
           />
         </div>
         {this.state.yx.length > 0 ? <div>
-          <Button style={{marginBottom: '5px', marginTop: '20px'}}>全部份额</Button>
+          <Button style={{marginBottom: '5px', marginTop: '20px'}}>宜信份额</Button>
           <Table
             size="small"
             sticky
@@ -404,7 +404,7 @@ export default class Calculator extends React.Component<any, any> {
                     <Input
                       disabled
                       defaultValue="0份可用"
-                      value={`${numeral(this.state.fundInfo?.available - this.state.fundInfo?.yx_available | 0).format(
+                      value={`${numeral(this.state.fundInfo?.available - (this.state.fundInfo?.yx_available || 0)).format(
                         '0,0.00',
                       )}份(天天)`}
                       size="small"
