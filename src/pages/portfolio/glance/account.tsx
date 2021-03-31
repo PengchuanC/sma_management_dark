@@ -18,8 +18,9 @@ export default class AccountAnalysis extends React.Component<any, any> {
   };
 
   drawAccount = (data: any) => {
-    const chart: echarts.ECharts = echarts.init(this.ref1.current);
+    const chart: echarts.ECharts = echarts.init(this.ref1.current, 'dark');
     const option: echarts.EChartOption = {
+      backgroundColor: '#2c343c',
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -83,8 +84,9 @@ export default class AccountAnalysis extends React.Component<any, any> {
   };
 
   drawProfit = (data: any) => {
-    const chart: echarts.ECharts = echarts.init(this.ref2.current);
+    const chart: echarts.ECharts = echarts.init(this.ref2.current, 'dark');
     const option: echarts.EChartOption = {
+      backgroundColor: '#2c343c',
       tooltip: {},
       legend: {
         top: '3%',
@@ -130,10 +132,9 @@ export default class AccountAnalysis extends React.Component<any, any> {
             className={styles.card}
             headStyle={{
               fontSize: '14px',
-              padding: '0 20px',
-              backgroundColor: '#fafafa',
+              padding: '0 15px',
             }}
-            bodyStyle={{ padding: '0 10px', height: '300px' }}
+            bodyStyle={{ padding: '0', height: '300px' }}
             size="small"
           >
             <div ref={this.ref1} className={styles.chart} />
@@ -145,10 +146,9 @@ export default class AccountAnalysis extends React.Component<any, any> {
             className={styles.card}
             headStyle={{
               fontSize: '14px',
-              padding: '0 20px',
-              backgroundColor: '#fafafa',
+              padding: '0 15px',
             }}
-            bodyStyle={{ padding: '0 10px', height: '300px' }}
+            bodyStyle={{ padding: '0', height: '300px' }}
             size="small"
           >
             <div ref={this.ref2} className={styles.chart} />

@@ -62,6 +62,7 @@ export default class Overview extends React.Component<any, any> {
   showChart = (data: any) => {
     const chart: any = echarts.init(this.ref.current, 'dark');
     let option = {
+      backgroundColor: '#2c343c',
       grid: {
         left: 50,
         right: 40
