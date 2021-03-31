@@ -91,6 +91,15 @@ interface holdingFundTypeYX {
   ratio: number,
 }
 
+// 组合持仓-野村东方分类
+interface holdingNOI {
+  key: number
+  secucode: string
+  secuname: string
+  mkt_cap: number
+  ratio: number
+}
+
 
 // 基金持股
 interface holdingStockType {
