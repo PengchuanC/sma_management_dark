@@ -1,10 +1,13 @@
 import React from 'react';
-import { Table } from 'antd';
+import {Select, Table} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AnalysisTabContext } from '@/utils/localstorage';
 import http from '@/utils/http';
 import { formatPercent, numeralNum } from '@/utils/util';
 import style from './analysis.less'
+
+
+const { Option } = Select
 
 
 function formatApply(num: number){
@@ -36,15 +39,33 @@ export default class HoldingFund extends React.Component<any, any> {
 
   static contextType = AnalysisTabContext
 
-  state: {data: holdingFundType[], portCode: string, date: moment.Moment} = {
+  state: {data: holdingFundType[], portCode: string, date: moment.Moment, portfolios: any} = {
     portCode: this.props.portCode,
     date: this.context.date,
     data: [],
+    portfolios: [],
   }
+
 
   fetchData = ()=>{
     http.get('/analysis/fundholding/', {
       params: {portCode: this.state.portCode, date: this.state.date.format('YYYY-MM-DD')}
+    }).then((r)=>{
+      this.setState({date: this.context.date, data: r})
+    })
+  }
+
+  fetchPortfolios = () => {
+    http.get('/basic/all/').then((r)=>{
+      const { data } = r
+      const portfolios = data.map((x: any)=>{ return {name: x.port_name, value: x.port_code}})
+      this.setState({portfolios})
+    })
+  }
+
+  selectPortfolio = (value: string) => {
+    http.get('/analysis/fundholding/', {
+      params: {portCode: value, date: this.state.date.format('YYYY-MM-DD')}
     }).then((r)=>{
       this.setState({date: this.context.date, data: r})
     })
@@ -58,6 +79,7 @@ export default class HoldingFund extends React.Component<any, any> {
 
   componentDidMount() {
     this.fetchData()
+    this.fetchPortfolios()
   }
 
   render() {
@@ -67,7 +89,7 @@ export default class HoldingFund extends React.Component<any, any> {
         dataIndex: 'key',
         key: 'key',
         align: 'center',
-        width: 70
+        width: 60
       },
       {
         title: '基金代码',
@@ -80,20 +102,31 @@ export default class HoldingFund extends React.Component<any, any> {
         dataIndex: 'secuname',
         key: 'secuname',
         align: 'left',
-        width: 160
+        width: 140
       },
       {
         title: '基金类型',
-        dataIndex: 'category',
-        key: 'category',
+        dataIndex: 'branch',
+        key: 'branch',
         align: 'left',
-        width: 120
+        width: 100,
+        filters: [{text: '股票型', value: '股票型'}, {text: '债券型', value: '债券型'}, {text: '另类', value: '另类'}, {text: '货币型', value: '货币型'}, {text: 'QDII型', value: 'QDII型'}, {text: 'FOF型', value: 'FOF型'}],
+        onFilter: (value: any, record)=> record.branch === value
+      },
+      {
+        title: '二级分类',
+        dataIndex: 'classify',
+        key: 'classify',
+        align: 'left',
+        width: 100,
+        sorter: (a: holdingFundType, b: holdingFundType) => a.classify.localeCompare(b.classify),
       },
       {
         title: '持仓市值',
         dataIndex: 'mkt_cap',
         key: 'mkt_cap',
         align: 'right',
+        width: 100,
         render: (text: any, record: holdingFundType) => numeralNum(record.mkt_cap),
       },
       {
@@ -101,8 +134,18 @@ export default class HoldingFund extends React.Component<any, any> {
         dataIndex: 'ratio',
         key: 'ratio',
         align: 'right',
+        width: 100,
         render: (text: any, record: holdingFundType) => formatPercent(record.ratio),
         sorter: (a: holdingFundType, b: holdingFundType) => a.ratio - b.ratio,
+      },
+      {
+        title: '累计收益',
+        dataIndex: 'total_profit',
+        key: 'total_profit',
+        align: 'right',
+        width: 100,
+        render: (text: any, record: holdingFundType) => numeralNum(record.total_profit),
+        sorter: (a: holdingFundType, b: holdingFundType) => a.total_profit - b.total_profit,
       },
       {
         title: '日收益',
@@ -177,33 +220,40 @@ export default class HoldingFund extends React.Component<any, any> {
         dataIndex: 'min_apply',
         key: 'min_apply',
         align: 'right',
+        width: 80,
         render: (text: any, record: holdingFundType) => numeralNum(record.min_apply),
-        sorter: (a: holdingFundType, b: holdingFundType) => a.min_apply - b.min_apply,
       },
       {
         title: '单日限额',
         dataIndex: 'max_apply',
         key: 'max_apply',
         align: 'right',
+        width: 80,
         render: (text: any, record: holdingFundType) => formatApply(record.max_apply),
-        sorter: (a: holdingFundType, b: holdingFundType) => a.max_apply - b.max_apply,
       },
     ]
     return (
-      <Table
-        className={style.holdingFundTable}
-        // style={{maxHeight: windowHeight}}
-        bordered
-        size='small'
-        columns={columns}
-        dataSource={this.state.data}
-        pagination={{defaultPageSize: 100, pageSizeOptions: ['15', '30', '50', '100', '200']}}
-        onRow={(row: holdingFundType)=>{
-          return {
-            onClick: ()=>{window.open(`http://product.nomuraoi-sec.com/factsheet/${row.secucode}.OF`) }
-          }
-        }}
-      />
+      <>
+        <Select style={{width: 200}} placeholder='选择组合' onSelect={this.selectPortfolio}>
+          {this.state.portfolios.map((x: any)=>{
+            return (<Option value={x.value}>{x.name}</Option>)
+          })}
+        </Select>
+        <Table
+          className={style.holdingFundTable}
+          scroll={{y: 490}}
+          bordered
+          size='small'
+          columns={columns}
+          dataSource={this.state.data}
+          pagination={{defaultPageSize: 100, pageSizeOptions: ['15', '30', '50', '100', '200']}}
+          onRow={(row: holdingFundType)=>{
+            return {
+              onClick: ()=>{window.open(`http://product.nomuraoi-sec.com/factsheet/${row.secucode}.OF`) }
+            }
+          }}
+        />
+      </>
     );
   }
 }

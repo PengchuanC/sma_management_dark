@@ -26,7 +26,7 @@ export default class AvgPosition extends NavChart {
         left: 60,
         top: 40,
         bottom: 30,
-        right: 40
+        right: 70
       },
       legend : {
         show : true,
@@ -44,7 +44,7 @@ export default class AvgPosition extends NavChart {
         },
         data: data.map(x=>x.date),
       },
-      yAxis: {
+      yAxis: [{
         type: 'value',
         splitLine: {
           show: false
@@ -53,10 +53,22 @@ export default class AvgPosition extends NavChart {
         scale: true,
         axisLabel: {
           formatter: (value: number)=>{
-            return (value*100).toFixed(2)
+            return (value*100).toFixed(0)
           }
         }
-      },
+      },{
+        type: 'value',
+        splitLine: {
+          show: false
+        },
+        nameLocation: 'end',
+        scale: true,
+        axisLabel: {
+          formatter: (value: number)=>{
+            return (value).toFixed(0)
+          }
+        }
+      }],
       series: [
         {
           type: 'line',
@@ -74,6 +86,15 @@ export default class AvgPosition extends NavChart {
           type: 'line',
           name: '灵活配置',
           data: data.map(x=>x.mix_flexible)
+        },{
+          type: 'line',
+          name: '当前组合',
+          data: data.map(x=>x.portfolio)
+        },{
+          type: 'line',
+          name: '沪深300',
+          data: data.map(x=>x.close),
+          yAxisIndex: 1
         }
       ]
     }

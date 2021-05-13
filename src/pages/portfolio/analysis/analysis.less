@@ -37,14 +37,13 @@
   height: fit-content;
 
   table {
-    border: none;
+    border: 1px #ccc solid;
     width: 100%;
     collapse: seperate;
-
   }
 
   th {
-    border: 1px #ccc solid;
+    border-bottom: 1px #ccc solid;
   }
 
   th:first-child{
@@ -66,7 +65,7 @@
   }
 
   td {
-    border: 1px #8c8c8c solid;
+    //border: 1px #8c8c8c solid;
   }
 
   td:first-child{
@@ -87,6 +86,10 @@
     padding-right: 10px;
   }
 
+  tr {
+    height: 30px;
+  }
+
   tr:nth-child(odd){
     background-color: #1f1f1f;
   }
@@ -95,13 +98,17 @@
     //background-color: #fff;
   }
 
+  .greyBg {
+    background-color: #1f1f1f;
+  }
+
   tr:first-child {
     height: 30px;
   }
 
   .chart {
     width: calc(100% - 5px);
-    height: 277px;
+    height: 220px;
     margin-left: 5px;
   }
 }
@@ -138,6 +145,11 @@
 
     .chart {
       height: 325px;
+      width: 100%;
+    }
+
+    .chartAttr {
+      height: 225px;
       width: 100%;
     }
   }

@@ -75,7 +75,7 @@ class PerformanceTable extends React.Component<any, any> {
                 <th>参考</th>
               </tr>
               <tr>
-                <td rowSpan={6}>收益指标</td>
+                <td rowSpan={6} className={style.greyBg}>收益指标</td>
                 <td>累计收益</td>
                 <td>{percent(d.acc_return_yield.p)}</td>
                 <td>{percent(d.acc_return_yield.b)}</td>
@@ -201,6 +201,7 @@ class PerformanceChart extends React.Component<any, any> {
 
   ref: React.RefObject<any> = React.createRef()
   ref2: React.RefObject<any> = React.createRef()
+  ref3: React.RefObject<any> = React.createRef()
 
   showChart = (data: contributeType, ref: React.RefObject<any>, type: string) =>{
     const chart: any = echarts.init(ref.current, 'dark');
@@ -259,7 +260,8 @@ class PerformanceChart extends React.Component<any, any> {
       params:{portCode: this.props.portCode, date: this.context.date.format('YYYY-MM-DD')}
     }).then(r=>{
       this.showChart(r.data, this.ref, '累计')
-      this.showChart(r.week, this.ref2, '当周')
+      this.showChart(r.week, this.ref2, 'WTD')
+      this.showChart(r.month, this.ref3, 'YTD')
       this.setState({})
     }).catch(()=>{
       warning()
@@ -285,6 +287,7 @@ class PerformanceChart extends React.Component<any, any> {
           <Button className={style.button}>组合业绩贡献</Button>
           <div className={style.chart} ref={this.ref} />
           <div className={style.chart} ref={this.ref2} />
+          <div className={style.chart} ref={this.ref3} />
         </div>
       </>
     );

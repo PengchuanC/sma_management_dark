@@ -63,6 +63,12 @@ export default class PortfolioTable extends React.Component {
   render() {
     const columns: any = [
       {
+        title: '#',
+        render: (text: any, record: any, index: any) => `${index+1}`,
+        align: 'center',
+        width: 60
+      },
+      {
         title: '产品代码',
         dataIndex: 'port_code',
         key: 'port_code',
@@ -81,12 +87,15 @@ export default class PortfolioTable extends React.Component {
         align: 'center',
         filters: [
           { text: '现金型', value: '现金型' },
+          { text: '固收型', value: '固收型' },
           { text: '平衡型', value: '平衡型' },
+          { text: '成长型', value: '成长型' },
+          { text: '权益型', value: '权益型' },
         ],
         onFilter: this.filterType,
       },
       {
-        title: '运作起始日',
+        title: '成立日期',
         dataIndex: 'launch_date',
         key: 'launch_date',
         align: 'center',
@@ -96,13 +105,13 @@ export default class PortfolioTable extends React.Component {
         },
       },
       {
-        title: '最新净值日',
+        title: '净值日期',
         dataIndex: 'last',
         key: 'last',
         align: 'center',
       },
       {
-        title: '净资产',
+        title: '资产净值',
         dataIndex: 'net_asset',
         key: 'net_asset',
         align: 'right',

@@ -34,17 +34,17 @@ export default class ValueHistory extends React.Component<any, any> {
                 <thead>
                 <tr>
                   <th className={styles.leftHead}>日期</th>
-                  {data.map((x: any)=><th>{x.date}</th>)}
+                  {data.map((x: any, idx)=><th key={`date${  idx}`}>{x.date}</th>)}
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                   <td className={styles.leftHead} >实际</td>
-                  {data.map((x: any)=><td>{formatPercent(x.change_pct)}</td>)}
+                  {data.map((x: any, idx)=><td key={`real${  idx}`}>{formatPercent(x.change_pct)}</td>)}
                 </tr>
                 <tr>
                   <td className={styles.leftHead}>估算</td>
-                  {data.map((x: any)=><td>{formatPercent(x.value)}</td>)}
+                  {data.map((x: any, idx)=><td key={`eval${idx}`}>{formatPercent(x.value)}</td>)}
                 </tr>
                 </tbody>
               </table>

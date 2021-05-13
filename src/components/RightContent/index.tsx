@@ -1,5 +1,6 @@
 import {Tag, Space} from 'antd';
 import React from 'react';
+// @ts-ignore
 import { useModel } from 'umi';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';

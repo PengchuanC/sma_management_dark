@@ -15,3 +15,10 @@ interface changeResultType {
   amount: number;
   fee: number;
 }
+
+interface targetType {
+  secucode: string
+  secuname: string
+  shares?: number
+  target: number
+}

@@ -13,6 +13,18 @@ interface assetType {
   value: number
 }
 
+
+// 历史资产配置
+interface allocateType {
+  date: string
+  equity: number
+  fix_income: number
+  alter: number
+  money: number
+  other: number
+}
+
+
 // 实时涨跌幅数据
 interface changeType {
   name: string,
@@ -26,6 +38,8 @@ interface avgPosType {
   mix_stock: number,
   mix_equal: number,
   mix_flexible: number,
+  portfolio: number,
+  close: number
 }
 
 // 客户问卷摘要

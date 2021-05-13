@@ -10,7 +10,8 @@ const Settings: LayoutSettings & {
   contentWidth: "Fluid",
   fixedHeader: true,
   fixSiderbar: true,
-  title: "投资管理系统",
+  logo: '../icons/logo.svg',
+  title: "财富投管系统",
   pwa: false,
   iconfontUrl: "",
   menu: {
