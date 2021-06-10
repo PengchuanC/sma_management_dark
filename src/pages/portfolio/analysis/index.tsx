@@ -46,15 +46,15 @@ class AnalysisTabs extends React.Component<any, any> {
   tabs = [
     {
       name: '业绩指标',
-      comp: <Performance portCode={this.props.portCode} />
+      comp: <Performance portCode={this.props.portCode} key={1}/>
     },
     {
       name: '持仓分布',
-      comp: <Holding portCode={this.props.portCode} />
+      comp: <Holding portCode={this.props.portCode} key={2}/>
     },
     {
       name: '业绩归因',
-      comp: <Attribute portCode={this.props.portCode} />
+      comp: <Attribute portCode={this.props.portCode} key={3}/>
     }
   ]
 

@@ -40,8 +40,15 @@
         path: '/portfolio/mock',
         name: '调仓贡献',
         icon: 'DotChartOutlined',
-        component: 'portfolio/mock/index'
+        component: 'portfolio/mock/index',
+        // hideInMenu: true
       },
+      {
+        path: '/portfolio/cta',
+        name: '持仓信息-CTA',
+        component: 'portfolio/cta/index',
+        hideInMenu: true
+      }
     ]
   },
   {

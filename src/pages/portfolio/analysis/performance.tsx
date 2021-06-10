@@ -1,12 +1,13 @@
 // eslint-disable-next-line max-classes-per-file
 import React from 'react';
-import { Row, Col, Spin, Button } from 'antd';
+import { Row, Col, Spin, Button, Radio } from 'antd';
 import * as echarts from 'echarts';
 import numeral from 'numeral';
 import style from './analysis.less'
 import { AnalysisTabContext } from '@/utils/localstorage';
 import http from '@/utils/http';
 import { warning } from '@/utils/util';
+import moment from "moment";
 
 const performance: performanceType = {
   acc_return_yield: { b: 0, p: 0 },
@@ -196,7 +197,8 @@ class PerformanceChart extends React.Component<any, any> {
   static contextType = AnalysisTabContext
 
   state = {
-    date: this.context.date
+    date: this.context.date,
+    profitType: 1,
   }
 
   ref: React.RefObject<any> = React.createRef()
@@ -256,35 +258,57 @@ class PerformanceChart extends React.Component<any, any> {
   }
 
   fetchData = () =>{
-    http.get('/analysis/attribute/', {
+    let url
+    if (this.state.profitType === 1){
+      url = '/analysis/attribute/'
+    }else{
+      url = '/analysis/monthly/'
+    }
+    http.get(url, {
       params:{portCode: this.props.portCode, date: this.context.date.format('YYYY-MM-DD')}
     }).then(r=>{
       this.showChart(r.data, this.ref, '累计')
       this.showChart(r.week, this.ref2, 'WTD')
-      this.showChart(r.month, this.ref3, 'YTD')
+      this.showChart(r.month, this.ref3, 'MTD')
       this.setState({})
     }).catch(()=>{
       warning()
     })
   }
 
-  componentDidUpdate() {
+  onChangeProfitType = (e: any)=>{
+    this.setState({profitType: e.target.value})
     this.fetchData()
+  }
+
+  componentDidUpdate(prevProps: any, prevState: any) {
+
+    const prev = moment(prevState.date).format('YYYY-MM-DD')
+    const now = moment(this.context.date).format('YYYY-MM-DD')
+    if (prev !== now){
+      this.fetchData()
+      this.setState({date: this.context.date})
+    }
   }
 
   componentDidMount() {
     this.fetchData()
   }
 
-  shouldComponentUpdate(): boolean {
-    return false;
-  }
+  // shouldComponentUpdate(): boolean {
+  //   return false;
+  // }
 
   render() {
+    const { profitType } = this.state
     return (
       <>
         <div className={style.performance}>
           <Button className={style.button}>组合业绩贡献</Button>
+          <Radio.Group onChange={this.onChangeProfitType} value={profitType}>
+            <Radio value={1}>不含费用</Radio>
+            <Radio value={2}>含费用</Radio>
+          </Radio.Group>
           <div className={style.chart} ref={this.ref} />
           <div className={style.chart} ref={this.ref2} />
           <div className={style.chart} ref={this.ref3} />

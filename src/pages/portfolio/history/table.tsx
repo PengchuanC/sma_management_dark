@@ -4,6 +4,7 @@ import styles from './history.less';
 import api from '@/utils/http';
 import { PortfolioContext } from '@/utils/localstorage';
 import { numeralNum } from '@/utils/util';
+import Cache from "@/utils/localstorage";
 
 interface dataType {
   date: string,
@@ -32,7 +33,8 @@ export default class HistoryTable extends React.Component<any, any> {
   }
 
   fetchData =()=>{
-    api.post('/history/summary/', {data: {portCode: this.state.portCode}}).then(r=>{
+    const portCode = Cache.getDefaultPortcode()
+    api.post('/history/summary/', {data: {portCode}}).then(r=>{
       this.setState({data: r.data, filter: r.filter})
     })
   }

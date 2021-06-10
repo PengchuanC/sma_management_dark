@@ -14,6 +14,7 @@ import Announcement from '@/pages/portfolio/glance/announcement';
 import AccountAnalysis from '@/pages/portfolio/glance/account';
 import PurchaseAndRansom from '@/pages/portfolio/glance/pr';
 import { PageContainer } from '@ant-design/pro-layout';
+import CtaHomePage from "@/pages/portfolio/glance/cta";
 
 function PortfolioInfo() {
   return (
@@ -21,6 +22,8 @@ function PortfolioInfo() {
       <Col span={18}>
         <div>
           <PortfolioTable />
+          <br />
+          <CtaHomePage className={styles.cta} />
         </div>
       </Col>
       <Col span={6}>

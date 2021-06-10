@@ -78,7 +78,7 @@ export default class HoldingNOI extends React.Component<any, any> {
             pagination={false}
             onRow={(row: holdingNOI)=>{
               return {
-                onClick: ()=>{if (row.secucode){window.open(`http://product.nomuraoi-sec.com/factsheet/${row.secucode}.OF`)}}
+                onClick: ()=>{if (row.secucode){window.open(`http://product.nomuraoi-sec.com/info/${row.secucode}`)}}
               }
             }}
           />

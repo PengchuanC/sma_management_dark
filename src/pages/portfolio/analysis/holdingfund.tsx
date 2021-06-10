@@ -96,6 +96,9 @@ export default class HoldingFund extends React.Component<any, any> {
         dataIndex: 'secucode',
         key: 'secucode',
         align: 'center',
+        render:(text)=>{
+          return <div className={style.clickable} onClick={()=>{window.open(`http://product.nomuraoi-sec.com/info/${text}`)}}>{text}</div>
+        },
       },
       {
         title: '基金名称',
@@ -236,7 +239,7 @@ export default class HoldingFund extends React.Component<any, any> {
       <>
         <Select style={{width: 200}} placeholder='选择组合' onSelect={this.selectPortfolio}>
           {this.state.portfolios.map((x: any)=>{
-            return (<Option value={x.value}>{x.name}</Option>)
+            return (<Option key={x.value} value={x.value}>{x.name}</Option>)
           })}
         </Select>
         <Table
@@ -247,11 +250,6 @@ export default class HoldingFund extends React.Component<any, any> {
           columns={columns}
           dataSource={this.state.data}
           pagination={{defaultPageSize: 100, pageSizeOptions: ['15', '30', '50', '100', '200']}}
-          onRow={(row: holdingFundType)=>{
-            return {
-              onClick: ()=>{window.open(`http://product.nomuraoi-sec.com/factsheet/${row.secucode}.OF`) }
-            }
-          }}
         />
       </>
     );

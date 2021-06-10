@@ -1,12 +1,12 @@
-import React from 'react';
-import { Table } from 'antd';
-import './list.less';
-// @ts-ignore
-import { history } from 'umi';
-import { PortfolioContext } from '@/utils/localstorage';
+// eslint-disable-next-line max-classes-per-file
+import React from "react";
 import api from '@/utils/http';
-import { numeralNum } from '@/utils/util';
-import Cache from "@/utils/localstorage";
+import { Button, Card, Col, Row, Statistic, Table } from "antd";
+import styles from './list.less';
+import { PortfolioContext } from "@/utils/localstorage";
+import { numeralNum } from "@/utils/util";
+import { history } from "umi";
+
 
 interface record {
   key: string;
@@ -26,7 +26,9 @@ interface record {
   fa: string;
 }
 
-export default class PortfolioTable extends React.Component {
+
+class CtaTable extends React.Component<any, any> {
+
   state = {
     filteredInfo: {},
     sortedInfo: {
@@ -36,12 +38,6 @@ export default class PortfolioTable extends React.Component {
     data: []
   };
 
-  fetchData() {
-    api.get('/basic/all/').then(r => {
-      const { data } = r
-      this.setState({ data });
-    });
-  }
 
   static contextType = PortfolioContext;
 
@@ -50,15 +46,11 @@ export default class PortfolioTable extends React.Component {
     return record.port_type === value;
   };
 
-  handleClick = (portcode: string, portName: string) => {
-    this.context.setPortCode(portcode);
-    Cache.dumpPortfolio(portcode);
-    localStorage.setItem('portName', portName);
-    history.push('/portfolio/overview');
-  };
-
-  componentDidMount() {
-    this.fetchData();
+  handleClick = (record: record)=>{
+    const { port_code, port_name } = record
+    sessionStorage.setItem('cta_name', port_name)
+    sessionStorage.setItem('cta_code', port_code)
+    history.push('/portfolio/cta')
   }
 
   render() {
@@ -87,11 +79,7 @@ export default class PortfolioTable extends React.Component {
         key: 'port_type',
         align: 'center',
         filters: [
-          { text: '现金型', value: '现金型' },
-          { text: '固收型', value: '固收型' },
-          { text: '平衡型', value: '平衡型' },
-          { text: '成长型', value: '成长型' },
-          { text: '权益型', value: '权益型' },
+          { text: 'CTA', value: 'CTA' },
         ],
         onFilter: this.filterType,
       },
@@ -160,19 +148,12 @@ export default class PortfolioTable extends React.Component {
         align: 'right',
         render: (text: any, record: record) => numeralNum(record.cash),
       },
-      {
-        title: 'FA',
-        dataIndex: 'fa',
-        key: 'fa',
-        align: 'right',
-        render: (text: any, record: record) => record.fa,
-      },
     ];
     return (
       <>
         <Table
-          key="sma_table"
-          dataSource={this.state.data}
+          key="cta_table"
+          dataSource={this.props.data}
           columns={columns}
           bordered
           pagination={false}
@@ -181,12 +162,73 @@ export default class PortfolioTable extends React.Component {
           onRow={(record: record) => {
             return {
               onClick: () => {
-                this.handleClick(record.port_code, record.port_name)
+                this.handleClick(record)
               },
             };
           }}
         />
       </>
+    );
+  }
+}
+
+
+
+
+export default class CtaHomePage extends React.Component<any, any> {
+
+  state = {
+    data: [],
+    num: 0,
+    total: 0,
+    avg: 0
+  }
+
+  fetchData() {
+    api.get('/cta/').then(r => {
+      const { data, num, total, avg } = r
+      this.setState({ data, num, total, avg });
+    });
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  render() {
+    return (
+      <div className={styles.cta}>
+        <Button className={styles.button}>CTA产品</Button>
+        <div className={styles.contentArea}>
+          <Row>
+            <Col offset={1} span={5}>
+              <Card className={styles.statisticCard}>
+                <Statistic title="账户总数" value={this.state?.num} />
+              </Card>
+            </Col>
+            <Col span={5}>
+              <Card className={styles.statisticCard}>
+                <Statistic
+                  title="管理资产"
+                  value={this.state?.total}
+                  precision={2}
+                />
+              </Card>
+            </Col>
+            <Col span={5}>
+              <Card className={styles.statisticCard}>
+                <Statistic
+                  title="户均资产"
+                  value={this.state?.avg}
+                  precision={2}
+                />
+              </Card>
+            </Col>
+          </Row>
+          <br/>
+        </div>
+        <CtaTable data={this.state.data} />
+      </div>
     );
   }
 }

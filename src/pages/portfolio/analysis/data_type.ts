@@ -79,7 +79,23 @@ interface holdingFundType {
   apply_type: string,
   redeem_type: string,
   min_apply: number,
-  max_apply: number
+  max_apply: number,
+}
+
+interface holdingCtaType {
+  key: number,
+  secucode: string,
+  secuabbr: string,
+  recent: string,
+  date: string,
+  mkt_cap: number,
+  ratio: number,
+  week: number,
+  month: number,
+  quarter: number,
+  last_year: number,
+  year: number,
+  ytd: number,
 }
 
 // 组合持仓基金数据-宜信普泽
@@ -158,4 +174,37 @@ interface profitType {
     up: number,
     down: number
   }
+}
+
+// CTA流水
+interface TransCtaType {
+  secucode: string
+  amount: number
+  share: number
+  price: number
+}
+
+
+// ETF数据
+interface holdingETF {
+  secucode: string
+  secuabbr: string
+  date: Date
+  total_profit: number
+  fee: number
+  mkt_cap: number
+  holding_value: number
+  children?: holdingETF[]
+}
+
+interface transETF {
+  buy_date: string
+  sell_date: string
+  buy_price: number
+  sell_price: number
+  value: number
+  r: number
+  profit: number
+  fee: number
+  note: string
 }
