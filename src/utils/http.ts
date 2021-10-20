@@ -8,7 +8,7 @@ export const basicSocket = 'ws://10.170.129.129/ws';
 
 const api = extend({
   prefix: basicUrl,
-  timeout: 5000,
+  timeout: 200000,
   useCache: true,
   errorHandler: () => {
     message.error('请求数据错误').then(r => console.log(r));

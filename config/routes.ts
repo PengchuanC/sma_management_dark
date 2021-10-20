@@ -9,7 +9,7 @@
     icon: 'FundViewOutlined',
     routes: [
       {
-        'path': '/portfolio',
+        path: '/portfolio',
         redirect: '/portfolio/glance'
       },
       {
@@ -41,7 +41,6 @@
         name: '调仓贡献',
         icon: 'DotChartOutlined',
         component: 'portfolio/mock/index',
-        // hideInMenu: true
       },
       {
         path: '/portfolio/cta',
@@ -67,7 +66,30 @@
     path: '/capital',
     name: '资金流向',
     icon: 'FieldNumberOutlined',
-    component: 'capitalflow/index'
+    routes: [
+      {
+        path: '/capital',
+        redirect: '/capital/first'
+      },
+      {
+        path: '/capital/first',
+        name: '一级行业资金流向',
+        hideInMenu: true,
+        component: 'capitalflow/index',
+      },
+      {
+        path: '/capital/second',
+        name: '二级行业资金流向',
+        component: 'capitalflow/second/index',
+        hideInMenu: true
+      },
+      {
+        path: '/capital/chart',
+        name: '资金流向图',
+        component: 'capitalflow/chart/index',
+        hideInMenu: true
+      }
+    ]
   },
   {
     path: '/change',

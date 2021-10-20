@@ -5,9 +5,9 @@
 
 // eslint-disable-next-line max-classes-per-file
 import React from 'react';
-import { Card, Row, Col } from 'antd';
+import {Card, Row, Col} from 'antd';
 import styles from './analysis.less';
-import { AnalysisTabContext } from '@/utils/localstorage';
+import {AnalysisTabContext} from '@/utils/localstorage';
 import * as echarts from 'echarts';
 import http from '@/utils/http';
 import moment from 'moment';
@@ -29,7 +29,7 @@ class StyleCard extends React.Component<any, any> {
         right: "5%",
         bottom: '10%'
       },
-      tooltip : {
+      tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
@@ -39,79 +39,81 @@ class StyleCard extends React.Component<any, any> {
         }
       },
       legend: {
-        data:['小盘价值','小盘成长','中盘价值','中盘成长','大盘价值','大盘成长','中证全债']
+        data: ['小盘价值', '小盘成长', '中盘价值', '中盘成长', '大盘价值', '大盘成长', '中证全债']
       },
-      xAxis : [
+      xAxis: [
         {
-          type : 'category',
-          boundaryGap : false,
-          data : data.map(x=>x.date)
+          type: 'category',
+          boundaryGap: false,
+          data: data.map(x => x.date)
         }
       ],
-      yAxis : [
+      yAxis: [
         {
-          type : 'value',
+          type: 'value',
           max: 1,
           axisLabel: {
-            formatter: (value: number) => {return numeral(value).format('0.%')}
+            formatter: (value: number) => {
+              return numeral(value).format('0.%')
+            }
           }
         }
       ],
-      series : [
+      series: [
         {
-          name:'小盘价值',
-          type:'line',
+          name: '小盘价值',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.small_value),
+          data: data.map(x => x.small_value),
           symbol: "circle"
         },
         {
-          name:'小盘成长',
-          type:'line',
+          name: '小盘成长',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.small_growth),
+          data: data.map(x => x.small_growth),
           symbol: "circle"
         },
         {
-          name:'中盘价值',
-          type:'line',
+          name: '中盘价值',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.mid_value),
+          data: data.map(x => x.mid_value),
           symbol: "circle"
         },
         {
-          name:'中盘成长',
-          type:'line',
+          name: '中盘成长',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.mid_growth),
+          data: data.map(x => x.mid_growth),
           symbol: "circle"
         },
         {
-          name:'大盘价值',
-          type:'line',
+          name: '大盘价值',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.large_value),
+          data: data.map(x => x.large_value),
           symbol: "circle"
         },
         {
-          name:'大盘成长',
-          type:'line',
+          name: '大盘成长',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.large_growth),
+          data: data.map(x => x.large_growth),
           symbol: "circle"
         },
         {
-          name:'中证全债',
-          type:'line',
+          name: '中证全债',
+          type: 'line',
           stack: '占比',
           areaStyle: {},
-          data: data.map(x=>x.bond),
+          data: data.map(x => x.bond),
           symbol: "circle"
         },
       ]
@@ -120,7 +122,12 @@ class StyleCard extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    http.get('/analysis/style/', {params:{portCode: this.props.portCode,date:  moment(this.props.date).format('YYYY-MM-DD')}}).then(r=>{
+    http.get('/analysis/style/', {
+      params: {
+        portCode: this.props.portCode,
+        date: moment(this.props.date).format('YYYY-MM-DD')
+      }
+    }).then(r => {
       this.showChart(r)
     })
   }
@@ -132,7 +139,7 @@ class StyleCard extends React.Component<any, any> {
         size={'small'}
         className={styles.card}
       >
-        <div ref={this.ref} className={styles.chart} />
+        <div ref={this.ref} className={styles.chart}/>
       </Card>
     );
   }
@@ -143,7 +150,7 @@ class ExposureCard extends React.Component<any, any> {
 
   ref: React.RefObject<any> = React.createRef()
 
-  showChart = (data: {name: string[], value: number[]}) => {
+  showChart = (data: { index: number[], name: string[], portfolio: number[] }) => {
     const chart: any = echarts.init(this.ref.current, 'dark');
     const option = {
       backgroundColor: '#2c343c',
@@ -155,7 +162,7 @@ class ExposureCard extends React.Component<any, any> {
         bottom: '5%',
         containLabel: true
       },
-      tooltip : {
+      tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'shadow',
@@ -163,9 +170,9 @@ class ExposureCard extends React.Component<any, any> {
             backgroundColor: '#6a7985'
           },
         },
-        formatter (params: any){
+        formatter(params: any) {
           const tar = params[0];
-          return `${tar.name  }<br/>${  numeral(tar.value).format('0.00')}`;
+          return `${tar.name}<br/>${numeral(tar.value).format('0.00')}`;
         }
       },
       xAxis: {
@@ -184,23 +191,41 @@ class ExposureCard extends React.Component<any, any> {
           formatter: (v: number) => numeral(v).format('0.00')
         }
       },
-      series: [{
-        data: data.value,
-        type: 'bar',
-        label: {
-          show: true,
-          position: 'top',
-          formatter: (v: any) => numeral(v.data).format('0.00'),
-          // color: 'black'
+      legend: {show: true},
+      series: [
+        {
+          name: '组合',
+          data: data.portfolio,
+          type: 'bar',
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (v: any) => numeral(v.data).format('0.00'),
+            // color: 'black'
+          },
+        }, {
+          name: '中证800',
+          data: data.index,
+          type: 'bar',
+          label: {
+            show: true,
+            position: 'top',
+            formatter: (v: any) => numeral(v.data).format('0.00'),
+            // color: 'black'
+          },
         },
-        barWidth: '60%'
-      }]
+      ]
     };
     chart.setOption(option);
   }
 
   componentDidMount() {
-    http.get('/analysis/expose/', {params:{portCode: this.props.portCode, date: moment(this.props.date).format('YYYY-MM-DD')}}).then(r=>{
+    http.get('/analysis/expose/', {
+      params: {
+        portCode: this.props.portCode,
+        date: moment(this.props.date).format('YYYY-MM-DD')
+      }
+    }).then(r => {
       this.showChart(r)
     })
   }
@@ -212,7 +237,7 @@ class ExposureCard extends React.Component<any, any> {
         size={'small'}
         className={styles.card}
       >
-        <div ref={this.ref} className={styles.chart} />
+        <div ref={this.ref} className={styles.chart}/>
       </Card>
     );
   }
@@ -227,22 +252,40 @@ class BrinsonCard extends React.Component<any, any> {
     if (data == null) {
       return
     }
-    const x1 = data.map((x: any)=>{return x.raa? x.raa.toFixed(4): 0});
-    const max1 = Math.ceil(Math.max(...x1.map((x: any)=> {return Math.abs(x)}))*20)/20;
-    const x2 = data.map((x: any)=>{return x.rss? x.rss.toFixed(4): 0});
-    const max2 = Math.ceil(Math.max(...x2.map((x: any)=> {return Math.abs(x)}))*20)/20;
-    const x3 = data.map((x: any)=>{return x.rin? x.rin.toFixed(4): 0});
-    const max3 = Math.ceil(Math.max(...x3.map((x: any)=> {return Math.abs(x)}))*20)/20;
-    const x4 = data.map((x: any)=>{return x.rtt? x.rtt.toFixed(4): 0});
-    const max4 = Math.ceil(Math.max(...x4.map((x: any)=> {return Math.abs(x)}))*20)/20;
-    const y = data.map((x: any)=>{return x.industry}).reverse();
+    const x1 = data.map((x: any) => {
+      return x.raa ? x.raa.toFixed(4) : 0
+    });
+    const max1 = Math.ceil(Math.max(...x1.map((x: any) => {
+      return Math.abs(x)
+    })) * 20) / 20;
+    const x2 = data.map((x: any) => {
+      return x.rss ? x.rss.toFixed(4) : 0
+    });
+    const max2 = Math.ceil(Math.max(...x2.map((x: any) => {
+      return Math.abs(x)
+    })) * 20) / 20;
+    const x3 = data.map((x: any) => {
+      return x.rin ? x.rin.toFixed(4) : 0
+    });
+    const max3 = Math.ceil(Math.max(...x3.map((x: any) => {
+      return Math.abs(x)
+    })) * 20) / 20;
+    const x4 = data.map((x: any) => {
+      return x.rtt ? x.rtt.toFixed(4) : 0
+    });
+    const max4 = Math.ceil(Math.max(...x4.map((x: any) => {
+      return Math.abs(x)
+    })) * 20) / 20;
+    const y = data.map((x: any) => {
+      return x.industry
+    }).reverse();
     const myChart: any = echarts.init(this.ref.current, 'dark');
     const option = {
       backgroundColor: '#2c343c',
       textStyle: {
         fontFamily: ['kaiti', 'Arial']
       },
-      tooltip : {
+      tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
@@ -258,10 +301,10 @@ class BrinsonCard extends React.Component<any, any> {
         {x: '76%', y: '15%', width: '18%', height: '70%', show: false,}
       ],
       xAxis: [
-        {gridIndex: 0, min: -max1, max: max1, splitLine:{show:false}},
-        {gridIndex: 1, min: -max2, max: max2, splitLine:{show:false}},
-        {gridIndex: 2, min: -max3, max: max3, splitLine:{show:false}},
-        {gridIndex: 3, min: -max4, max: max4, splitLine:{show:false}}
+        {gridIndex: 0, min: -max1, max: max1, splitLine: {show: false}},
+        {gridIndex: 1, min: -max2, max: max2, splitLine: {show: false}},
+        {gridIndex: 2, min: -max3, max: max3, splitLine: {show: false}},
+        {gridIndex: 3, min: -max4, max: max4, splitLine: {show: false}}
       ],
       yAxis: [
         {
@@ -336,7 +379,12 @@ class BrinsonCard extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    http.get('/analysis/brinson/', {params:{portCode: this.props.portCode,date:  moment(this.props.date).format('YYYY-MM-DD')}}).then(r=>{
+    http.get('/analysis/brinson/', {
+      params: {
+        portCode: this.props.portCode,
+        date: moment(this.props.date).format('YYYY-MM-DD')
+      }
+    }).then(r => {
       this.showChart(r)
     })
   }
@@ -344,13 +392,13 @@ class BrinsonCard extends React.Component<any, any> {
   render() {
     return (
       <Card
-      title='归因分析'
-      size={'small'}
-      className={styles.card2xHeight}
-    >
-      <div ref={this.ref} className={styles.chart2xHeight}/>
-    </Card>
-  );
+        title='归因分析'
+        size={'small'}
+        className={styles.card2xHeight}
+      >
+        <div ref={this.ref} className={styles.chart2xHeight}/>
+      </Card>
+    );
   }
 }
 
@@ -362,17 +410,18 @@ class MovingVolatility extends React.Component<any, any> {
     http.get(
       '/analysis/std/',
       {
-        params:{portCode: this.props.portCode,
+        params: {
+          portCode: this.props.portCode,
           date: moment(this.props.date).format('YYYY-MM-DD')
         }
-      }).then(r=>{
-        this.showChart(r)
-    }).catch(e=>{
+      }).then(r => {
+      this.showChart(r)
+    }).catch(e => {
       console.log(e)
     })
   }
 
-  showChart = (data: {date: string, vol: number, downside_vol: number}[])=>{
+  showChart = (data: { date: string, vol: number, downside_vol: number }[]) => {
     const chart: any = echarts.init(this.ref.current, 'dark');
     const option = {
       backgroundColor: '#2c343c',
@@ -385,8 +434,8 @@ class MovingVolatility extends React.Component<any, any> {
         bottom: 30,
         right: 20
       },
-      legend : {
-        show : true,
+      legend: {
+        show: true,
         icon: 'line',
         top: 10
       },
@@ -399,7 +448,7 @@ class MovingVolatility extends React.Component<any, any> {
         splitLine: {
           show: false
         },
-        data: data.map(x=>x.date),
+        data: data.map(x => x.date),
       },
       yAxis: {
         type: 'value',
@@ -409,19 +458,19 @@ class MovingVolatility extends React.Component<any, any> {
         nameLocation: 'end',
         scale: true,
         axisLabel: {
-          formatter: (value: number)=>{
-            return `${value.toFixed(1)  }%`
+          formatter: (value: number) => {
+            return `${value.toFixed(1)}%`
           }
         }
       },
       series: [
         {
           type: 'line',
-          data: data.map(x=>x.vol),
+          data: data.map(x => x.vol),
           name: '波动率'
-        },{
+        }, {
           type: 'line',
-          data: data.map(x=>x.downside_vol),
+          data: data.map(x => x.downside_vol),
           name: '下行波动率'
         }]
     }
@@ -452,7 +501,7 @@ export default class Attribute extends React.Component<any, any> {
   }
 
   componentDidUpdate() {
-    if (this.state.date !== this.context.date){
+    if (this.state.date !== this.context.date) {
       this.setState({date: this.context.date})
     }
   }
@@ -463,16 +512,16 @@ export default class Attribute extends React.Component<any, any> {
         <div className={styles.attribute}>
           <Row>
             <Col span={12}>
-              <BrinsonCard portCode={this.state.portCode} date={this.state.date} />
+              <BrinsonCard portCode={this.state.portCode} date={this.state.date}/>
             </Col>
             <Col span={12}>
-              <StyleCard portCode={this.state.portCode} date={this.state.date} />
-              <ExposureCard portCode={this.state.portCode} date={this.state.date} />
+              <StyleCard portCode={this.state.portCode} date={this.state.date}/>
+              <ExposureCard portCode={this.state.portCode} date={this.state.date}/>
             </Col>
           </Row>
           <Row>
             <Col span={12}>
-              <MovingVolatility portCode={this.state.portCode} date={this.state.date} />
+              <MovingVolatility portCode={this.state.portCode} date={this.state.date}/>
             </Col>
           </Row>
         </div>

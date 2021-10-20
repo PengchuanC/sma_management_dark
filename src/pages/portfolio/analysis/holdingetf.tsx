@@ -12,13 +12,18 @@ export default class HoldingETF extends React.Component<any, any> {
 
   static contextType = AnalysisTabContext
 
-  state: {data: holdingETF[], portCode: string, date: moment.Moment, trans: transETF[], win: number, total: number} = {
+  state: {data: holdingETF[], portCode: string, date: moment.Moment, trans: transETF[], win: number, total: number, selected: any} = {
     portCode: this.props.portCode,
     date: this.context.date,
     data: [],
     trans: [],
     win: 0,
-    total: 0
+    total: 0,
+    selected: {
+      data: [],
+      total: 0,
+      win: 0
+    }
   }
 
   fetchData = ()=>{
@@ -29,13 +34,30 @@ export default class HoldingETF extends React.Component<any, any> {
     })
   }
 
-  fetchTrans = (secucode: string) => {
+  fetchTrans = () => {
     http.get('/analysis/fundholding/etf_analysis/', {
-      params: {port_code: this.state.portCode, secucode}
+      params: {port_code: this.state.portCode}
     }).then((r: any)=>{
       const {win, total, data} = r
       this.setState({win, total, trans: data})
     })
+  }
+
+  onClick = (secucode: string) => {
+    const data: any[] = []
+    let total = 0
+    let win_count = 0
+    this.state.trans.forEach((x: any) => {
+      if (x.secucode === secucode){
+        data.push(x)
+        total += Number(x.profit)
+        if (x.r >=0) {
+          win_count += 1
+        }
+      }
+    })
+    const win = win_count / data.length
+    this.setState({selected: {data, total, win}})
   }
 
   componentDidUpdate() {
@@ -46,6 +68,7 @@ export default class HoldingETF extends React.Component<any, any> {
 
   componentDidMount() {
     this.fetchData()
+    this.fetchTrans()
   }
 
   render() {
@@ -177,7 +200,7 @@ export default class HoldingETF extends React.Component<any, any> {
             pagination={false}
             onRow={(row: holdingETF)=>{
               return {
-                onClick: ()=>{this.fetchTrans(row.secucode)}
+                onClick: ()=>{this.onClick(row.secucode)}
               }
             }}
           />
@@ -187,14 +210,27 @@ export default class HoldingETF extends React.Component<any, any> {
             <Row>
               <Statistic
                 className={style.statistic}
-                title="累计收益"
+                title="ETF累计收益"
                 value={this.state.total}
                 precision={2}
               />
               <Statistic
                 className={style.statistic}
-                title="操作胜率"
+                title="ETF操作胜率"
                 value={this.state.win * 100}
+                precision={0}
+                suffix={'%'}
+              />
+              <Statistic
+                className={style.statistic}
+                title="所选基金累计收益"
+                value={this.state.selected.total}
+                precision={2}
+              />
+              <Statistic
+                className={style.statistic}
+                title="所选基金操作胜率"
+                value={this.state.selected.win * 100}
                 precision={0}
                 suffix={'%'}
               />
@@ -204,7 +240,7 @@ export default class HoldingETF extends React.Component<any, any> {
             bordered
             size='small'
             columns={columns2}
-            dataSource={this.state.trans}
+            dataSource={this.state.selected.data}
             pagination={false}
           />
         </Col>

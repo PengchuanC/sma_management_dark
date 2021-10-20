@@ -215,7 +215,7 @@ class PerformanceChart extends React.Component<any, any> {
       grid: {
         left: 40,
         top: 30,
-        height: 185
+        height: 150
       },
       textStyle: {
         fontSize: 12

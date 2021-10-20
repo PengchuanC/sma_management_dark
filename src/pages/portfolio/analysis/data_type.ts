@@ -69,6 +69,7 @@ interface holdingFundType {
   mkt_cap: number,
   ratio: number,
   total_profit: number,
+  war: number,
   day: number,
   week: number,
   month: number,
@@ -122,8 +123,8 @@ interface holdingNOI {
 // 基金持股
 interface holdingStockType {
   key: number,
-  stockcode: string,
-  stockname: string,
+  secucode: string,
+  secuname: string,
   ratio: number,
   ofnv: number,
   cumsum: number

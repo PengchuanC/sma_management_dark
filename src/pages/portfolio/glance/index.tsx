@@ -19,14 +19,14 @@ import CtaHomePage from "@/pages/portfolio/glance/cta";
 function PortfolioInfo() {
   return (
     <Row>
-      <Col span={18}>
+      <Col span={19}>
         <div>
           <PortfolioTable />
           <br />
           <CtaHomePage className={styles.cta} />
         </div>
       </Col>
-      <Col span={6}>
+      <Col span={5}>
         <Announcement />
       </Col>
     </Row>

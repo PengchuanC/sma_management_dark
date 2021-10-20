@@ -92,6 +92,7 @@ export default class PortfolioTable extends React.Component {
           { text: '平衡型', value: '平衡型' },
           { text: '成长型', value: '成长型' },
           { text: '权益型', value: '权益型' },
+          { text: 'CTA', value: 'CTA' },
         ],
         onFilter: this.filterType,
       },

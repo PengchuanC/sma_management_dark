@@ -25,8 +25,6 @@ export default class HoldingStock extends React.Component<any, any> {
       params: {portCode: this.state.portCode, date: this.state.date.format('YYYY-MM-DD')}
     }).then(r=>{
       this.setState({date: this.context.date, stock: r.stock, industry: r.industry})
-    }).catch(e=>{
-      console.log(e)
     })
   }
 
@@ -50,14 +48,14 @@ export default class HoldingStock extends React.Component<any, any> {
       },
       {
         title: '股票代码',
-        dataIndex: 'stockcode',
-        key: 'stockcode',
+        dataIndex: 'secucode',
+        key: 'secucode',
         align: 'center',
       },
       {
         title: '股票名称',
-        dataIndex: 'stockname',
-        key: 'stockname',
+        dataIndex: 'secuname',
+        key: 'secuname',
         align: 'left',
       },
       {
