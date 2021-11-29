@@ -10,6 +10,7 @@ import Performance from './performance';
 import Holding from './holding';
 import Attribute from './attribute';
 import { PageContainer} from '@ant-design/pro-layout';
+import HoldingPerformance from "@/pages/portfolio/analysis/holdingperformance";
 
 
 // 日期选择模块，利用context更新组件
@@ -55,6 +56,10 @@ class AnalysisTabs extends React.Component<any, any> {
     {
       name: '业绩归因',
       comp: <Attribute portCode={this.props.portCode} key={3}/>
+    },
+    {
+      name: '绩效分析',
+      comp: <HoldingPerformance portCode={this.props.portCode} key={4}/>
     }
   ]
 

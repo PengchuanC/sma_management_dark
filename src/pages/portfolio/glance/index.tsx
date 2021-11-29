@@ -88,11 +88,6 @@ export default class Glance extends React.Component<any, any> {
                   />
                 </Card>
               </Col>
-              <Col span={4}>
-                <Card className={styles.statisticCard}>
-                  <Statistic title="最新日期" value={this.state.last} />
-                </Card>
-              </Col>
             </Row>
             <CustomDropdown items={items} />
           </div>

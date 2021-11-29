@@ -48,21 +48,21 @@ export default class CtaHolding extends React.Component<any, any> {
         dataIndex: 'secuabbr',
         key: 'secuabbr',
         align: 'left',
-        width: 140
+        width: 300
       },
       {
         title: '净值日期',
         dataIndex: 'recent',
         key: 'recent',
         align: 'center',
-        width: 140
+        // width: 140
       },
       {
         title: '持仓市值',
         dataIndex: 'mkt_cap',
         key: 'mkt_cap',
         align: 'right',
-        width: 100,
+        // width: 100,
         render: (_, record: holdingCtaType) => numeralNum(record.mkt_cap),
       },
       {
@@ -70,7 +70,7 @@ export default class CtaHolding extends React.Component<any, any> {
         dataIndex: 'ratio',
         key: 'ratio',
         align: 'right',
-        width: 100,
+        // width: 100,
         render: (_, record: holdingCtaType) => formatPercent(record.ratio),
         sorter: (a: holdingCtaType, b: holdingCtaType) => a.ratio - b.ratio,
       },

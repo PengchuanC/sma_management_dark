@@ -11,6 +11,7 @@ import ValueHistory from './value_history';
 import Cache from "@/utils/localstorage";
 import {PageContainer} from '@ant-design/pro-layout';
 import AllocateHistory from "@/pages/portfolio/overview/allocate_history";
+import Questionnaire from "@/pages/portfolio/overview/questionnaire";
 
 
 export default class Overview extends React.Component<any, any> {
@@ -36,7 +37,6 @@ export default class Overview extends React.Component<any, any> {
   render() {
     const portcode = Cache.getDefaultPortcode()
     const portName = localStorage.getItem('portName') || ''
-    const q = this.state.question
     return (
       <PageContainer title={portName}>
         <div className={styles.contentArea}>
@@ -86,21 +86,7 @@ export default class Overview extends React.Component<any, any> {
               </div>
             </Col>
             <Col span={10} className={styles.rightArea}>
-              <div >
-                <div className={styles.tableTitle}>客户测评主要信息</div>
-                <p className={styles.tdHeader}>风险等级: {q?.risk}</p>
-                <p className={styles.tdHeader}>投资期限: {q?.maturity}</p>
-                <p className={styles.tdHeader}>目标收益: {q?.arr}</p>
-                <p className={styles.tdHeader}>目标风险: {q?.volatility}</p>
-                <p className={styles.tdHeader}>流动性要求: {q?.fluidity}</p>
-                {q?.age !== 0 ? (<p className={styles.tdHeader}>年龄: {q?.age}</p>) : <></>}
-                <p className={styles.tdHeader}>投资经验: {q?.experience}</p>
-                <div className={styles.tableTitle}>特殊需求</div>
-                <p className={styles.tdHeader}>近期大额资金支出计划: {q?.plan}</p>
-                <p className={styles.tdHeader}>回撤容忍度: {q?.tolerance}</p>
-                <p className={styles.tdHeader}>另类资产限制: {q?.alter_limit}</p>
-                <p className={styles.tdHeader}>跨境投资限制: {q?.cross_border_limit}</p>
-              </div>
+              <Questionnaire />
             </Col>
           </Row>
         </div>

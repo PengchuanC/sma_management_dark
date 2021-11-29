@@ -374,7 +374,6 @@ class BrinsonCard extends React.Component<any, any> {
         },
       ]
     };
-    console.log("OK")
     myChart.setOption(option);
   }
 

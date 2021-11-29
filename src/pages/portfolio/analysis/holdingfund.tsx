@@ -166,6 +166,10 @@ export default class HoldingFund extends React.Component<any, any> {
         align: 'right',
         width: 100,
         render: (text: any, record: holdingFundType) => numeralNum(record.mkt_cap),
+        filterMultiple: false,
+        filters: [{text: '显示全部', value: true}, {text: '显示持有', value: false}],
+        onFilter: (value: any, record)=> value? true: record.mkt_cap > 0,
+        defaultFilteredValue: [false]
       },
       {
         title: '占比',
