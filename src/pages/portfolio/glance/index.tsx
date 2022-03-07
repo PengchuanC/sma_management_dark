@@ -4,7 +4,7 @@
 
 import React from 'react';
 import styles from './list.less';
-import { Statistic, Row, Col, Card } from 'antd';
+import { Row, Col } from 'antd';
 import PortfolioTable from './table';
 import api from '@/utils/http';
 import type { dropdownType } from '@/utils/dropdown';
@@ -64,31 +64,6 @@ export default class Glance extends React.Component<any, any> {
       <PageContainer title={false}>
         <div className={styles.layoutContent}>
           <div className={styles.contentArea}>
-            <Row>
-              <Col offset={1} span={4}>
-                <Card className={styles.statisticCard}>
-                  <Statistic title="账户总数" value={this.state.num} />
-                </Card>
-              </Col>
-              <Col span={4}>
-                <Card className={styles.statisticCard}>
-                  <Statistic
-                    title="管理资产"
-                    value={this.state.total}
-                    precision={2}
-                  />
-                </Card>
-              </Col>
-              <Col span={4}>
-                <Card className={styles.statisticCard}>
-                  <Statistic
-                    title="户均资产"
-                    value={this.state.avg}
-                    precision={2}
-                  />
-                </Card>
-              </Col>
-            </Row>
             <CustomDropdown items={items} />
           </div>
         </div>

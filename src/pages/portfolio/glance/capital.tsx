@@ -1,12 +1,13 @@
 import React from 'react';
 import moment from 'moment';
+import {numeralNum} from "@/utils/util";
 import { Row, Col, Statistic, Card, DatePicker, Table } from 'antd';
 import styles from '@/pages/portfolio/glance/list.less';
 import http from '@/utils/http';
 
 export default class CapitalAnalyze extends React.Component<any, any> {
   state: {
-    total: { purchase?: number; ransom?: number };
+    total: { p_total?: number; r_total?: number };
     date: moment.Moment;
     detail: any;
   } = {
@@ -22,9 +23,9 @@ export default class CapitalAnalyze extends React.Component<any, any> {
       })
       .then(r => {
         this.setState({
-          total: r.total,
+          total: {p_total: r.p_total, r_total: r.r_total},
           date: moment(r.date),
-          detail: r.detail,
+          detail: r.data,
         });
       });
   };
@@ -46,28 +47,31 @@ export default class CapitalAnalyze extends React.Component<any, any> {
         align: 'center',
       },
       {
-        title: '组合代码',
-        dataIndex: 'port_code',
-        key: 'port_code',
+        title: '确认日期',
+        dataIndex: 'confirm',
+        key: 'confirm',
         align: 'center',
       },
       {
-        title: '组合名称',
-        dataIndex: 'port_name',
-        key: 'port_name',
-        align: 'left',
+        title: '当日入金(元)',
+        dataIndex: 'pr_amount',
+        key: 'pr_amount',
+        align: 'right',
+        render: (text: any, record: any) => numeralNum(record.pr_amount),
       },
       {
-        title: '交易类型',
-        dataIndex: 'operation',
-        key: 'operation',
+        title: '当日出金(元)',
+        dataIndex: 'rs_amount',
+        key: 'rs_amount',
         align: 'right',
+        render: (text: any, record: any) => numeralNum(record.rs_amount),
       },
       {
-        title: '交易数量(元/份)',
-        dataIndex: 'operation_amount',
-        key: 'operation_amount',
+        title: '当日净入金(元)',
+        dataIndex: 'net',
+        key: 'net',
         align: 'right',
+        render: (text: any, record: any) => numeralNum(record.net),
       },
     ];
     return (
@@ -81,8 +85,8 @@ export default class CapitalAnalyze extends React.Component<any, any> {
           <Col offset={1} span={4}>
             <Card className={styles.statisticCard}>
               <Statistic
-                title="本日入金"
-                value={this.state.total?.purchase || 0}
+                title="累计入金"
+                value={this.state.total?.p_total || 0}
                 precision={2}
               />
             </Card>
@@ -90,8 +94,8 @@ export default class CapitalAnalyze extends React.Component<any, any> {
           <Col span={4}>
             <Card className={styles.statisticCard}>
               <Statistic
-                title="本日出金"
-                value={this.state.total?.ransom || 0}
+                title="累计出金"
+                value={this.state.total?.r_total || 0}
                 precision={2}
               />
             </Card>
@@ -105,7 +109,7 @@ export default class CapitalAnalyze extends React.Component<any, any> {
               bordered
               columns={columns}
               dataSource={this.state.detail}
-              pagination={false}
+              pagination={{pageSize: 20}}
             />
           </Col>
         </Row>

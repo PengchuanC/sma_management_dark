@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'antd';
+import {Card, Col, Row, Statistic, Table} from 'antd';
 import './list.less';
 // @ts-ignore
 import { history } from 'umi';
@@ -7,6 +7,7 @@ import { PortfolioContext } from '@/utils/localstorage';
 import api from '@/utils/http';
 import { numeralNum } from '@/utils/util';
 import Cache from "@/utils/localstorage";
+import styles from "@/pages/portfolio/glance/list.less";
 
 interface record {
   key: string;
@@ -33,13 +34,14 @@ export default class PortfolioTable extends React.Component {
       columnKey: undefined,
       order: false,
     },
-    data: []
+    data: [],
+    stat: {num: 0, total: 0, avg: 0}
   };
 
   fetchData() {
     api.get('/basic/all/').then(r => {
-      const { sma } = r
-      this.setState({ data: sma });
+      const { sma, sma_stat } = r
+      this.setState({ data: sma, stat: sma_stat });
     });
   }
 
@@ -171,22 +173,50 @@ export default class PortfolioTable extends React.Component {
     ];
     return (
       <>
-        <Table
-          key="sma_table"
-          dataSource={this.state.data}
-          columns={columns}
-          bordered
-          pagination={false}
-          size="small"
-          className="table"
-          onRow={(record: record) => {
-            return {
-              onClick: () => {
-                this.handleClick(record.port_code, record.port_name)
-              },
-            };
-          }}
-        />
+        <div className={styles.contentArea}>
+          <Row>
+            <Col offset={1} span={4}>
+              <Card className={styles.statisticCard}>
+                <Statistic title="账户总数" value={this.state.stat.num} />
+              </Card>
+            </Col>
+            <Col span={4}>
+              <Card className={styles.statisticCard}>
+                <Statistic
+                  title="管理资产"
+                  value={this.state.stat.total}
+                  precision={2}
+                />
+              </Card>
+            </Col>
+            <Col span={4}>
+              <Card className={styles.statisticCard}>
+                <Statistic
+                  title="户均资产"
+                  value={this.state.stat.avg}
+                  precision={2}
+                />
+              </Card>
+            </Col>
+          </Row>
+          <br/>
+          <Table
+            key="sma_table"
+            dataSource={this.state.data}
+            columns={columns}
+            bordered
+            pagination={false}
+            size="small"
+            className="table"
+            onRow={(record: record) => {
+              return {
+                onClick: () => {
+                  this.handleClick(record.port_code, record.port_name)
+                },
+              };
+            }}
+          />
+        </div>
       </>
     );
   }

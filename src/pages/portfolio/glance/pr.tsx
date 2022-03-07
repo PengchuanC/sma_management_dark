@@ -3,22 +3,21 @@
  * */
 
 import React from 'react';
-import { Button, Table, Divider, message } from 'antd';
+import { Button, Table } from 'antd';
 import styles from './list.less';
 import http from '@/utils/http';
-import { CheckCircleOutlined } from '@ant-design/icons';
+import {numeralNum} from "@/utils/util";
 
-// Table row dataType
-interface rowType {
+// 基金申赎数据类型
+interface PRType {
   id?: number;
-  purchase_amount?: number;
-  ransom_share?: number;
-  p_open_date?: string;
-  r_open_date?: string;
-  p_confirm?: string;
-  r_confirm?: string;
-  should_pay?: number;
-  finish?: boolean;
+  port_code_id: string;
+  date: string;
+  confirm: string;
+  pr_amount: number;
+  rs_amount: number;
+  rs_fee: number;
+  ogr_name: string;
 }
 
 // Table column
@@ -26,127 +25,84 @@ const columns: any = [
   {
     title: '序号',
     align: 'center',
-    render: (text: string, record: rowType, index: number) => `${index + 1}`,
+    render: (text: string, record: PRType, index: number) => `${index + 1}`,
   },
   {
     title: '组合代码',
-    key: 'port_code',
-    dataIndex: 'port_code',
+    key: 'port_code_id',
+    dataIndex: 'port_code_id',
     align: 'left',
   },
   {
+    title: '申请日期',
+    key: 'date',
+    dataIndex: 'date',
+    align: 'center',
+    sorter: (row1: any, row2: any) => row1.date >= row2.date
+  },
+  {
+    title: '确认日期',
+    key: 'confirm',
+    dataIndex: 'confirm',
+    align: 'center',
+    sorter: (row1: any, row2: any) => row1.confirm >= row2.confirm
+  },
+  {
     title: '申购金额',
-    key: 'purchase',
-    dataIndex: 'purchase_amount',
+    key: 'pr_amount',
+    dataIndex: 'pr_amount',
     align: 'right',
+    render: (text: any, row: PRType) => numeralNum(row.pr_amount)
   },
   {
-    title: '赎回份额',
-    key: 'ransom',
-    dataIndex: 'ransom_share',
+    title: '赎回金额',
+    key: 'rs_amount',
+    dataIndex: 'rs_amount',
     align: 'right',
+    render: (text: any, row: PRType) => numeralNum(row.rs_amount)
   },
   {
-    title: '申购开放日',
-    key: 'p_open_date',
-    dataIndex: 'p_open_date',
-    align: 'center',
+    title: '赎回费用',
+    key: 'rs_fee',
+    dataIndex: 'rs_fee',
+    align: 'right',
+    render: (text: any, row: PRType) => numeralNum(row.rs_fee)
   },
   {
-    title: '赎回开放日',
-    key: 'r_open_date',
-    dataIndex: 'r_open_date',
-    align: 'center',
-  },
-  {
-    title: '申购确认日',
-    key: 'p_confirm',
-    dataIndex: 'p_confirm',
-    align: 'center',
-    render: (text: any, row: rowType) =>
-      row.p_confirm ? `T+${row.p_confirm}` : null,
-  },
-  {
-    title: '赎回确认日',
-    key: 'r_confirm',
-    dataIndex: 'r_confirm',
-    align: 'center',
-    render: (text: any, row: rowType) =>
-      row.r_confirm ? `T+${row.r_confirm}` : null,
-  },
-  {
-    title: '应付赎回款(预估)',
-    key: 'should_pay',
-    dataIndex: 'should_pay',
+    title: '机构名称',
+    key: 'org_name',
+    dataIndex: 'org_name',
     align: 'right',
   },
 ];
 
 export default class PurchaseAndRansom extends React.Component<any, any> {
   state = {
-    uncompleted: [],
     completed: [],
   };
 
-  fetchUncompleted = () => {
+  fetchCompleted = () => {
     http.get('/basic/pr/').then(r => {
-      this.setState({ uncompleted: r.uncompleted, completed: r.completed });
+      this.setState({ completed: r.completed });
     });
   };
 
-  updateUncompleted = (idx: number) => {
-    http.put('/basic/pr/', { params: { id: idx } }).catch(() => {
-      message.error('当前申赎记录无法标记为已完成');
-    });
-  };
 
-  markFinish = (idx: number) => {
-    const uncompleted: any = [...this.state.uncompleted];
-    let completed: any = [...this.state.completed];
-    const del = uncompleted.splice(idx, 1);
-    const {id} = del[0];
-    this.updateUncompleted(id);
-    completed = completed.concat(del);
-    this.setState({ uncompleted, completed });
-  };
 
   componentDidMount() {
-    this.fetchUncompleted();
+    this.fetchCompleted();
   }
 
   render() {
-    const action: any = [
-      {
-        title: '操作',
-        key: 'mark',
-        align: 'center',
-        render: (text: any, row: rowType, idx: number) => (
-          <Button
-            size="small"
-            type="text"
-            shape="circle"
-            icon={<CheckCircleOutlined />}
-            onClick={() => this.markFinish(idx)}
-          />
-        ),
-      },
-    ];
     return (
       <div className={styles.pr}>
-        <Button className={styles.button}>进行中</Button>
-        <Table
-          bordered
-          size="small"
-          columns={columns.concat(action)}
-          dataSource={this.state.uncompleted}
-        />
-        <Divider />
         <Button className={styles.button}>已完成</Button>
         <Table
           bordered
           size="small"
           columns={columns}
           dataSource={this.state.completed}
+          pagination={{pageSize: 15}}
         />
       </div>
     );

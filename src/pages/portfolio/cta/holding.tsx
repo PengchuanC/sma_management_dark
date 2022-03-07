@@ -20,7 +20,7 @@ export default class CtaHolding extends React.Component<any, any> {
   }
 
   fetch = ()=>{
-    api.get('/cta/holding', {params: {port_code: this.props.port_code}}).then(r=>{
+    api.get('/cta/holding/', {params: {port_code: this.props.port_code}}).then(r=>{
       this.setState({data: r})
     })
   }
