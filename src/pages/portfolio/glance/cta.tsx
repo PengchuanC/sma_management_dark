@@ -185,9 +185,9 @@ export default class CtaHomePage extends React.Component<any, any> {
   }
 
   fetchData() {
-    api.get('/cta/').then(r => {
-      const { data, num, total, avg } = r
-      this.setState({ data, num, total, avg });
+    api.get('/basic/all/').then(r => {
+      const { cta, cta_stat } = r
+      this.setState({ data: cta, num: cta_stat.num, total: cta_stat.total, avg: cta_stat.avg });
     });
   }
 

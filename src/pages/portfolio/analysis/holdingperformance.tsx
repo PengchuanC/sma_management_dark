@@ -85,8 +85,8 @@ class Performance extends React.Component<any, any> {
       },
       {
         title: '累计收益',
-        dataIndex: 'total_profit',
-        key: 'total_profit',
+        dataIndex: 'profit',
+        key: 'profit',
         align: 'right',
         render: (text: number)=> numeral(text).format( '0,000.0')
       },

@@ -75,8 +75,8 @@ export default class HoldingFund extends React.Component<any, any> {
 
   fetchPortfolios = () => {
     http.get('/basic/all/').then((r)=>{
-      const { data } = r
-      const portfolios = data.map((x: any)=>{ return {name: x.port_name, value: x.port_code}})
+      const { sma } = r
+      const portfolios = sma.map((x: any)=>{ return {name: x.port_name, value: x.port_code}})
       this.setState({portfolios})
     })
   }
@@ -106,6 +106,70 @@ export default class HoldingFund extends React.Component<any, any> {
     this.setState({isModalVisible: !isModalVisible})
   }
 
+  onSummary = (currentData: readonly holdingFundType[], columns: ColumnsType<holdingFundType>) => {
+
+    const data = currentData.length !== 0? currentData.reduce((total, current)=>{
+      return {
+        ...total,
+        mkt_cap: total.mkt_cap+current.mkt_cap,
+        ratio: total.ratio+current.ratio,
+        total_profit: total.profit + current.profit,
+        day: current.day
+      }
+    }): {
+      total_profit: 0,
+      ratio: 0,
+      mkt_cap: 0
+    }
+
+    if (!data) {
+      return <></>
+    }
+
+    const total: holdingFundType = {
+      apply_type: "",
+      branch: "",
+      classify: "",
+      day: 0,
+      half_year: 0,
+      key: 0,
+      max_apply: 0,
+      min_apply: 0,
+      mkt_cap: data.mkt_cap,
+      month: 0,
+      quarter: 0,
+      ratio: data.ratio,
+      redeem_type: "",
+      secucode: "合计",
+      profit: "profit" in data ? data.profit : 0,
+      war: 0,
+      week: 0,
+      year: 0,
+      ytd: 0
+    }
+
+    return (
+      <>
+        <Table.Summary.Row>
+          {columns.map((value, index)=>{
+            // @ts-ignore
+            const v = total[value.dataIndex]
+            let r = v
+            if (typeof v === 'number' && v !== 0) {
+              if (Math.abs(v) >= 10) {
+                r = numeralNum(v)
+              } else {
+                r = formatPercent(v)
+              }
+              return <Table.Summary.Cell align={value.align} key={index+1} index={index+1}>{r || null}</Table.Summary.Cell>
+            }
+            return <Table.Summary.Cell align={value.align} key={index+1} index={index+1}>{r || null}</Table.Summary.Cell>
+          })}
+        </Table.Summary.Row>
+      </>
+    )
+  }
+
   componentDidUpdate() {
     if (this.state.date.format('yyyyMMDD') !== this.context.date.format('yyyyMMDD')) {
       this.fetchData()
@@ -132,7 +196,7 @@ export default class HoldingFund extends React.Component<any, any> {
         key: 'secucode',
         align: 'center',
         render:(text)=>{
-          return <div className={style.clickable} onClick={()=>{window.open(`http://product.nomuraoi-sec.com/info/${text}`)}}>{text}</div>
+          return <div className={style.clickable} onClick={()=>{window.open(`https://product.nomuraoi-sec.com/info/${text}`)}}>{text}</div>
         },
       },
       {
@@ -167,9 +231,20 @@ export default class HoldingFund extends React.Component<any, any> {
         width: 100,
         render: (text: any, record: holdingFundType) => numeralNum(record.mkt_cap),
         filterMultiple: false,
-        filters: [{text: '显示全部', value: true}, {text: '显示持有', value: false}],
-        onFilter: (value: any, record)=> value? true: record.mkt_cap > 0,
-        defaultFilteredValue: [false]
+        filters: [{text: '显示全部', value: 0}, {text: '显示持有', value: 1}, {text: '显示清仓', value: 2}],
+        onFilter: (value: any, record)=> {
+          switch (value){
+            case 0:
+              return true
+            case 1:
+              return record.mkt_cap > 0
+            case 2:
+              return record.mkt_cap === 0
+            default:
+              return true
+          }
+        },
+        defaultFilteredValue: [1]
       },
       {
         title: '占比',
@@ -193,10 +268,10 @@ export default class HoldingFund extends React.Component<any, any> {
                          this.setState({isModalVisible: true, selected: {secucode, secuname}})
                        }}
           >
-            {numeralNum(record.total_profit)}
+            {numeralNum(record.profit)}
           </div>)
         },
-        sorter: (a: holdingFundType, b: holdingFundType) => a.total_profit - b.total_profit,
+        sorter: (a: holdingFundType, b: holdingFundType) => a.profit - b.profit,
       },
       {
         title: '加权收益',
@@ -373,12 +448,16 @@ export default class HoldingFund extends React.Component<any, any> {
         <Table
           className={style.holdingFundTable}
           scroll={{y: 760}}
+          sticky={true}
           bordered
           size='small'
           columns={columns}
           dataSource={this.state.data}
           pagination={false}
           // pagination={{defaultPageSize: 100, pageSizeOptions: ['15', '30', '50', '100', '200']}}
+          summary={
+            (currentData)=>this.onSummary(currentData, columns)
+          }
         />
         <Modal width={800} title={this.state.selected.secuname} visible={this.state.isModalVisible} onOk={this.onOk} onCancel={this.onOk}>
           <Table

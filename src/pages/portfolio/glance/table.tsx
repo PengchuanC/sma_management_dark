@@ -38,8 +38,8 @@ export default class PortfolioTable extends React.Component {
 
   fetchData() {
     api.get('/basic/all/').then(r => {
-      const { data } = r
-      this.setState({ data });
+      const { sma } = r
+      this.setState({ data: sma });
     });
   }
 

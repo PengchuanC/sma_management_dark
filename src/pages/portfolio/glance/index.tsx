@@ -46,12 +46,12 @@ export default class Glance extends React.Component<any, any> {
     num: 0,
     total: 0,
     avg: 0,
-    last: '',
   };
 
   fetchData() {
     api.get('/basic/all/').then(r => {
-      this.setState({ num: r.num, total: r.total, avg: r.avg, last: r.last });
+      const {sma_stat} = r
+      this.setState({ num: sma_stat.num, total: sma_stat.total, avg: sma_stat.avg});
     });
   }
 

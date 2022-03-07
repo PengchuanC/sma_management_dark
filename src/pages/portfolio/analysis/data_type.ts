@@ -68,7 +68,7 @@ interface holdingFundType {
   classify: string,
   mkt_cap: number,
   ratio: number,
-  total_profit: number,
+  profit: number,
   war: number,
   day: number,
   week: number,
@@ -191,10 +191,10 @@ interface holdingETF {
   secucode: string
   secuabbr: string
   date: Date
-  total_profit: number
-  fee: number
+  profit: number
+  fare: number
   mkt_cap: number
-  holding_value: number
+  current_shares: number
   children?: holdingETF[]
 }
 

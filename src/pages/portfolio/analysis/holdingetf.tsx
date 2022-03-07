@@ -95,17 +95,17 @@ export default class HoldingETF extends React.Component<any, any> {
       },
       {
         title: '持仓收益',
-        dataIndex: 'total_profit',
-        key: 'total_profit',
+        dataIndex: 'profit',
+        key: 'profit',
         align: 'right',
-        render: (text: any, record) => numeralNum(record.total_profit)
+        render: (text: any, record) => numeralNum(record.profit)
       },
       {
         title: '交易佣金',
-        dataIndex: 'fee',
-        key: 'fee',
+        dataIndex: 'fare',
+        key: 'fare',
         align: 'right',
-        render: (text: any, record) => numeralNum(record.fee)
+        render: (text: any, record) => numeralNum(record.fare)
       },
       {
         title: '持仓市值(元)',
@@ -116,10 +116,10 @@ export default class HoldingETF extends React.Component<any, any> {
       },
       {
         title: '持仓份额',
-        dataIndex: 'holding_value',
-        key: 'holding_value',
+        dataIndex: 'current_shares',
+        key: 'current_shares',
         align: 'right',
-        render: (text: any, record: holdingETF) => numeralNum(record.holding_value),
+        render: (text: any, record: holdingETF) => numeralNum(record.current_shares),
       }
     ]
 
